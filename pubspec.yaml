@@ -1,0 +1,43 @@
+name: passgrinder_mobile
+description: Passgrinder mobile password generator
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  crypto: ^3.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FFFFFF"
+  remove_alpha_ios: true
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/icons/
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Lato-Regular.ttf
+          weight: 400
+    - family: SourceCodePro
+      fonts:
+        - asset: assets/fonts/SourceCodePro-Regular.ttf
+          weight: 400

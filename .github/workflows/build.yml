@@ -1,0 +1,76 @@
+name: Build Mobile
+
+on:
+  push:
+    branches: [main]
+    tags: ['*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          channel: 'stable'
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  build-android:
+    needs: test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          channel: 'stable'
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - run: flutter build appbundle --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-release
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+
+  build-ios:
+    needs: test
+    runs-on: macos-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          channel: 'stable'
+      - run: flutter pub get
+      - run: flutter build ios --release --no-codesign
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-release
+          path: build/ios/iphoneos/Runner.app
+
+  release:
+    needs: [build-android, build-ios]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            android-release/flutter-apk/app-release.apk
+          draft: true
