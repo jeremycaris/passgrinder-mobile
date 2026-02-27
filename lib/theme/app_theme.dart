@@ -90,9 +90,13 @@ class AppTheme {
           ),
         ),
       ),
-      snackBarTheme: const SnackBarThemeData(
-        backgroundColor: Colors.black87,
-        contentTextStyle: TextStyle(color: Colors.white),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: _primaryGreen,
+        contentTextStyle: const TextStyle(color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6),
+        ),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
@@ -172,9 +176,13 @@ class AppTheme {
           ),
         ),
       ),
-      snackBarTheme: const SnackBarThemeData(
-        backgroundColor: Colors.black87,
-        contentTextStyle: TextStyle(color: Colors.white),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: _primaryGreen,
+        contentTextStyle: const TextStyle(color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6),
+        ),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }

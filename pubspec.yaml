@@ -30,6 +30,7 @@ flutter:
   assets:
     - assets/
     - assets/icons/
+    - assets/images/
   fonts:
     - family: Lato
       fonts:

@@ -26,13 +26,28 @@ class _MasterPasswordFieldState extends State<MasterPasswordField> {
       autocorrect: false,
       enableSuggestions: false,
       textInputAction: TextInputAction.next,
+      style: const TextStyle(
+        fontFamily: 'SourceCodePro',
+        fontSize: 15,
+      ),
       decoration: InputDecoration(
         labelText: 'Master Password',
-        prefixIcon: const Icon(Icons.lock_outline),
+        hintText: 'Enter your master password',
+        prefixIcon: const Padding(
+          padding: EdgeInsets.only(left: 12, right: 8),
+          child: Icon(Icons.lock_outline, size: 18),
+        ),
+        prefixIconConstraints:
+            const BoxConstraints(minWidth: 0, minHeight: 0),
+        suffixIconConstraints:
+            const BoxConstraints(minWidth: 40, minHeight: 40),
         suffixIcon: IconButton(
-          icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility),
+          icon: Icon(
+            _obscure ? Icons.visibility : Icons.visibility_off,
+            size: 20,
+          ),
           onPressed: () => setState(() => _obscure = !_obscure),
-          tooltip: _obscure ? 'Show password' : 'Hide password',
+          tooltip: _obscure ? 'Show' : 'Hide',
         ),
       ),
     );

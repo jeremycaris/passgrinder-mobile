@@ -17,23 +17,22 @@ void main() {
       await tester.pumpWidget(buildApp());
 
       expect(find.text('Master Password'), findsOneWidget);
-      expect(find.text('Unique Phrase'), findsOneWidget);
-      expect(find.text('Variation'), findsOneWidget);
-      expect(find.text('Copy Password'), findsOneWidget);
+      expect(find.text('Unique Phrase (optional)'), findsOneWidget);
+      expect(find.text('Default'), findsOneWidget);
+      expect(find.text('Variation 1'), findsOneWidget);
+      // Password output area (copy icon)
+      expect(find.byIcon(Icons.copy), findsOneWidget);
     });
 
-    testWidgets('copy button is disabled when no password generated',
+    testWidgets('copy icon is disabled when no password generated',
         (tester) async {
       await tester.pumpWidget(buildApp());
 
-      // Find the button containing 'Copy Password' text
-      final buttonFinder = find.ancestor(
-        of: find.text('Copy Password'),
-        matching: find.bySubtype<ButtonStyleButton>(),
+      // Find the copy icon button
+      final copyButton = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, Icons.copy),
       );
-      expect(buttonFinder, findsOneWidget);
-      final button = tester.widget<ButtonStyleButton>(buttonFinder);
-      expect(button.onPressed, isNull);
+      expect(copyButton.onPressed, isNull);
     });
 
     testWidgets('generates password when master password has text',
@@ -46,12 +45,11 @@ void main() {
       );
       await tester.pump();
 
-      // The password output should no longer show placeholder
-      // (desktop generates password even with empty unique phrase)
-      expect(
-        find.text('Enter master password and phrase'),
-        findsNothing,
+      // Copy icon should now be enabled
+      final copyButton = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, Icons.copy),
       );
+      expect(copyButton.onPressed, isNotNull);
     });
 
     testWidgets('generates different password with both fields',
@@ -63,38 +61,39 @@ void main() {
         'test123',
       );
       await tester.enterText(
-        find.widgetWithText(TextField, 'Unique Phrase'),
+        find.widgetWithText(TextField, 'Unique Phrase (optional)'),
         'github.com',
       );
       await tester.pump();
 
-      expect(
-        find.text('Enter master password and phrase'),
-        findsNothing,
+      // Copy icon should be enabled
+      final copyButton = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, Icons.copy),
       );
+      expect(copyButton.onPressed, isNotNull);
     });
 
-    testWidgets('variation chips are tappable', (tester) async {
+    testWidgets('variation radio buttons are tappable', (tester) async {
       await tester.pumpWidget(buildApp());
 
-      // Tap variation 1
+      // Tap Variation 1 label
       await tester.tap(find.text('Variation 1'));
       await tester.pump();
 
-      // Verify chip is selected
-      final chip = tester.widget<ChoiceChip>(
-        find.widgetWithText(ChoiceChip, 'Variation 1'),
+      // The radio for index 1 should now be selected via RadioGroup
+      final radioGroup = tester.widget<RadioGroup<int>>(
+        find.byType(RadioGroup<int>),
       );
-      expect(chip.selected, isTrue);
+      expect(radioGroup.groupValue, equals(1));
     });
 
     testWidgets('default variation is initially selected', (tester) async {
       await tester.pumpWidget(buildApp());
 
-      final chip = tester.widget<ChoiceChip>(
-        find.widgetWithText(ChoiceChip, 'Default'),
+      final radioGroup = tester.widget<RadioGroup<int>>(
+        find.byType(RadioGroup<int>),
       );
-      expect(chip.selected, isTrue);
+      expect(radioGroup.groupValue, equals(0));
     });
 
     testWidgets('visibility toggle works on master password', (tester) async {
@@ -106,8 +105,9 @@ void main() {
       );
       expect(textField.obscureText, isTrue);
 
-      // Tap visibility toggle
-      await tester.tap(find.byIcon(Icons.visibility_off));
+      // Find the visibility icon in the master password field area
+      // Master password uses Icons.visibility (show) when obscured
+      await tester.tap(find.byIcon(Icons.visibility).first);
       await tester.pump();
 
       // Now visible
@@ -117,18 +117,17 @@ void main() {
       expect(updatedTextField.obscureText, isFalse);
     });
 
-    testWidgets('shows 4 variation chips', (tester) async {
+    testWidgets('shows 4 variation radio buttons', (tester) async {
       await tester.pumpWidget(buildApp());
 
-      expect(find.byType(ChoiceChip), findsNWidgets(4));
+      expect(find.byType(Radio<int>), findsNWidgets(4));
       expect(find.text('Default'), findsOneWidget);
       expect(find.text('Variation 1'), findsOneWidget);
       expect(find.text('Variation 2'), findsOneWidget);
       expect(find.text('Variation 3'), findsOneWidget);
     });
 
-    testWidgets('copy button enables when password is generated',
-        (tester) async {
+    testWidgets('reset icon clears fields and password', (tester) async {
       await tester.pumpWidget(buildApp());
 
       // Enter text to generate password
@@ -138,13 +137,34 @@ void main() {
       );
       await tester.pump();
 
-      final buttonFinder = find.ancestor(
-        of: find.text('Copy Password'),
-        matching: find.bySubtype<ButtonStyleButton>(),
+      // Reset should be enabled
+      final resetButton = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, Icons.restart_alt),
       );
-      expect(buttonFinder, findsOneWidget);
-      final button = tester.widget<ButtonStyleButton>(buttonFinder);
-      expect(button.onPressed, isNotNull);
+      expect(resetButton.onPressed, isNotNull);
+
+      // Tap reset
+      await tester.tap(find.byIcon(Icons.restart_alt));
+      await tester.pump();
+
+      // Copy icon should be disabled again
+      final copyButton = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, Icons.copy),
+      );
+      expect(copyButton.onPressed, isNull);
+    });
+
+    testWidgets('helper text is displayed', (tester) async {
+      await tester.pumpWidget(buildApp());
+
+      expect(
+        find.textContaining('Use the website URL, domain name'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Use a variation if you are required'),
+        findsOneWidget,
+      );
     });
   });
 }

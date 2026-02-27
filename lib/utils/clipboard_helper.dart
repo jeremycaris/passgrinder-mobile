@@ -12,10 +12,17 @@ class ClipboardHelper {
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password copied to clipboard'),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: const Text(
+            'Password copied to clipboard',
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
+          backgroundColor: const Color(0xFF6baf78),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
         ),
       );
     }
