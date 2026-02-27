@@ -32,8 +32,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       duration: const Duration(minutes: 1),
       onReset: _clearAllFields,
     );
-    _masterPasswordController.addListener(_onInputChanged);
-    _uniquePhraseController.addListener(_onInputChanged);
   }
 
   @override
@@ -130,70 +128,70 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Logo
-                Center(
-                  child: Image.asset(
-                    'assets/images/passgrinder-1200.png',
-                    height: 28,
-                    fit: BoxFit.contain,
+                children: [
+                  // Logo
+                  Center(
+                    child: Image.asset(
+                      'assets/images/passgrinder-1200.png',
+                      height: 28,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                // Master Password
-                MasterPasswordField(
-                  controller: _masterPasswordController,
-                  onChanged: (_) => _onInputChanged(),
-                ),
-                const SizedBox(height: 14),
-
-                // Unique Phrase
-                UniquePhraseField(
-                  controller: _uniquePhraseController,
-                  onChanged: (_) => _onInputChanged(),
-                ),
-                const SizedBox(height: 10),
-
-                // Helper text (matches desktop)
-                Text(
-                  'Use the website URL, domain name, or app name where this password will be used to grind your master password into something more unique.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: helperColor,
+                  // Master Password
+                  MasterPasswordField(
+                    controller: _masterPasswordController,
+                    onChanged: (_) => _onInputChanged(),
                   ),
-                ),
-                const SizedBox(height: 18),
+                  const SizedBox(height: 14),
 
-                // Variation Selector
-                VariationSelector(
-                  count: variationCount,
-                  selectedIndex: _selectedVariation,
-                  onChanged: _onVariationChanged,
-                ),
-                const SizedBox(height: 10),
-
-                // Variation helper text (matches desktop)
-                Text(
-                  'Use a variation if you are required to change your password without needing to change your master password or unique phrase.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: helperColor,
+                  // Unique Phrase
+                  UniquePhraseField(
+                    controller: _uniquePhraseController,
+                    onChanged: (_) => _onInputChanged(),
                   ),
-                ),
-                const SizedBox(height: 22),
+                  const SizedBox(height: 10),
 
-                // Password Output with inline copy/reset/visibility
-                PasswordOutput(
-                  password: _generatedPassword,
-                  showPassword: _showPassword,
-                  onToggleVisibility: _togglePasswordVisibility,
-                  onCopy: _copyPassword,
-                  onReset: _isResetEnabled ? _clearAllFields : null,
-                ),
-              ],
+                  // Helper text (matches desktop)
+                  Text(
+                    'Use the website URL, domain name, or app name where this password will be used to grind your master password into something more unique.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: helperColor),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // Variation Selector
+                  VariationSelector(
+                    count: variationCount,
+                    selectedIndex: _selectedVariation,
+                    onChanged: _onVariationChanged,
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Variation helper text (matches desktop)
+                  Text(
+                    'Use a variation if you are required to change your password without needing to change your master password or unique phrase.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: helperColor),
+                  ),
+                  const SizedBox(height: 22),
+
+                  // Password Output with inline copy/reset/visibility
+                  PasswordOutput(
+                    password: _generatedPassword,
+                    showPassword: _showPassword,
+                    onToggleVisibility: _togglePasswordVisibility,
+                    onCopy: _copyPassword,
+                    onReset: _isResetEnabled ? _clearAllFields : null,
+                  ),
+                ],
+              ),
             ),
-          ),
           ),
         ),
       ),

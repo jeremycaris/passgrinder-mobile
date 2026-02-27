@@ -15,7 +15,7 @@ class UniquePhraseField extends StatefulWidget {
 }
 
 class _UniquePhraseFieldState extends State<UniquePhraseField> {
-  bool _obscure = true;
+  bool _obscure = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +26,7 @@ class _UniquePhraseFieldState extends State<UniquePhraseField> {
       autocorrect: false,
       enableSuggestions: false,
       textInputAction: TextInputAction.done,
-      style: const TextStyle(
-        fontFamily: 'SourceCodePro',
-        fontSize: 15,
-      ),
+      style: const TextStyle(fontFamily: 'SourceCodePro', fontSize: 15),
       decoration: InputDecoration(
         labelText: 'Unique Phrase (optional)',
         hintText: 'e.g., gmail.com, MyBankApp, etc.',
@@ -37,10 +34,11 @@ class _UniquePhraseFieldState extends State<UniquePhraseField> {
           padding: EdgeInsets.only(left: 12, right: 8),
           child: Icon(Icons.link, size: 18),
         ),
-        prefixIconConstraints:
-            const BoxConstraints(minWidth: 0, minHeight: 0),
-        suffixIconConstraints:
-            const BoxConstraints(minWidth: 40, minHeight: 40),
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+        suffixIconConstraints: const BoxConstraints(
+          minWidth: 40,
+          minHeight: 40,
+        ),
         suffixIcon: IconButton(
           onPressed: () => setState(() => _obscure = !_obscure),
           icon: Icon(

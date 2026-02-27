@@ -24,28 +24,27 @@ class PasswordOutput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final inputTheme = theme.inputDecorationTheme;
 
-    const primaryGreen = Color(0xFF6baf78);
-    const onLight = Color(0xFF1e2629);
-    final borderColor = isLight ? Colors.grey.shade300 : const Color(0xFF3a4249);
-    final panelColor = isLight ? Colors.white : const Color(0xFF232a2e);
-    final textColor = isLight ? onLight : Colors.white;
-    final iconColor = isLight ? onLight : Colors.white;
-    final disabledIconColor = isLight
-        ? onLight.withValues(alpha: 0.35)
-        : Colors.white.withValues(alpha: 0.35);
+    final borderColor =
+        (inputTheme.enabledBorder as OutlineInputBorder?)?.borderSide.color ??
+        Colors.grey.shade300;
+    final panelColor = inputTheme.fillColor ?? colorScheme.surface;
+    final textColor = colorScheme.onSurface;
+    final iconColor = colorScheme.onSurface;
+    final disabledIconColor = colorScheme.onSurface.withValues(alpha: 0.35);
 
     final hasPassword = password.isNotEmpty;
-    final bool copyEnabled = hasPassword;
+    final bool copyEnabled = hasPassword && onCopy != null;
     final bool resetEnabled = onReset != null;
     final bool visibilityEnabled = hasPassword;
 
     final ButtonStyle iconBtnStyle = IconButton.styleFrom(
       hoverColor: Colors.transparent,
-      focusColor: primaryGreen.withValues(alpha: 0.1),
-      highlightColor: primaryGreen.withValues(alpha: 0.15),
+      focusColor: colorScheme.primary.withValues(alpha: 0.1),
+      highlightColor: colorScheme.primary.withValues(alpha: 0.15),
       splashFactory: InkRipple.splashFactory,
       backgroundColor: Colors.transparent,
       disabledBackgroundColor: Colors.transparent,
